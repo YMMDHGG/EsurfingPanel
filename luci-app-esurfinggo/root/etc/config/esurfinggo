@@ -1,0 +1,14 @@
+config main 'main'
+	option enabled '1'
+
+config module 'module'
+	option enabled '1'
+
+config account
+	option enabled '1'
+	option account ''
+	option password ''
+	option sms ''
+
+config log
+	option enabled '1'

@@ -1,0 +1,7 @@
+Package: luci-app-esurfinggo
+Version: 1.4.11
+Depends: luci-base, luci-compat
+License: MIT
+Section: luci
+Architecture: all
+Description: EsurfingGo v1.4.11 - multi-strategy upload (setfilehandler+fd+base64+raw) for ucode & Lua LuCI

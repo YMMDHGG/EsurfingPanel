@@ -1,0 +1,147 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "天翼校园网面板"
+msgstr "天翼校园网面板"
+
+msgid "天翼校园网(ESurfing)自动认证拨号管理面板，支持多账号多播。"
+msgstr "天翼校园网(ESurfing)自动认证拨号管理面板，支持多账号多播。"
+
+msgid "模块管理"
+msgstr "模块管理"
+
+msgid "模块状态"
+msgstr "模块状态"
+
+msgid "正在检测状态..."
+msgstr "正在检测状态..."
+
+msgid "运行中"
+msgstr "运行中"
+
+msgid "个实例"
+msgstr "个实例"
+
+msgid "模块已安装，未运行"
+msgstr "模块已安装，未运行"
+
+msgid "模块未安装"
+msgstr "模块未安装"
+
+msgid "模块路径"
+msgstr "模块路径"
+
+msgid "未知"
+msgstr "未知"
+
+msgid "架构"
+msgstr "架构"
+
+msgid "路由器"
+msgstr "路由器"
+
+msgid "状态查询失败"
+msgstr "状态查询失败"
+
+msgid "刷新状态"
+msgstr "刷新状态"
+
+msgid "全部启动"
+msgstr "全部启动"
+
+msgid "全部停止"
+msgstr "全部停止"
+
+msgid "全部重启"
+msgstr "全部重启"
+
+msgid "确定要启动所有已启用的拨号账号吗？"
+msgstr "确定要启动所有已启用的拨号账号吗？"
+
+msgid "确定要停止所有拨号进程吗？"
+msgstr "确定要停止所有拨号进程吗？"
+
+msgid "确定要重启所有拨号进程吗？"
+msgstr "确定要重启所有拨号进程吗？"
+
+msgid "安装模块"
+msgstr "安装模块"
+
+msgid "选择文件并上传"
+msgstr "选择文件并上传"
+
+msgid "正在上传..."
+msgstr "正在上传..."
+
+msgid "解析响应失败"
+msgstr "解析响应失败"
+
+msgid "上传失败"
+msgstr "上传失败"
+
+msgid "网络错误"
+msgstr "网络错误"
+
+msgid "拨号账号列表"
+msgstr "拨号账号列表"
+
+msgid "最多支持10个账号，多个账号同时启用即为多播"
+msgstr "最多支持10个账号，多个账号同时启用即为多播"
+
+msgid "启用"
+msgstr "启用"
+
+msgid "账号"
+msgstr "账号"
+
+msgid "密码"
+msgstr "密码"
+
+msgid "短信验证码(选填)"
+msgstr "短信验证码(选填)"
+
+msgid "如需短信验证则填写"
+msgstr "如需短信验证则填写"
+
+msgid "操作"
+msgstr "操作"
+
+msgid "启动"
+msgstr "启动"
+
+msgid "停止"
+msgstr "停止"
+
+msgid "已停止"
+msgstr "已停止"
+
+msgid "运行日志"
+msgstr "运行日志"
+
+msgid "日志"
+msgstr "日志"
+
+msgid "刷新日志"
+msgstr "刷新日志"
+
+msgid "清除日志"
+msgstr "清除日志"
+
+msgid "正在加载日志..."
+msgstr "正在加载日志..."
+
+msgid "正在加载..."
+msgstr "正在加载..."
+
+msgid "暂无日志"
+msgstr "暂无日志"
+
+msgid "加载失败"
+msgstr "加载失败"
+
+msgid "确定清除日志？"
+msgstr "确定清除日志？"
+
+msgid "日志已清除"
+msgstr "日志已清除"

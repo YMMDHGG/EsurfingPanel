@@ -1,0 +1,55 @@
+#!/bin/sh
+# EsurfingGo macvlan multi-cast boot script
+# Creates virtual interfaces with unique MACs for multi-device simulation
+# Run before esurfinggo init.d (priority 98, esurfinggo starts at 99)
+
+START=98
+STOP=10
+
+MACVLAN_PARENT="eth0"
+MACVLAN_COUNT=2
+MACVLAN_PREFIX="mv"
+
+macvlan_create() {
+    local idx=$1
+    local ifname="${MACVLAN_PREFIX}${idx}"
+    local mac_hex=$(printf '%02x' $idx)
+
+    # Only create if not already present
+    ip link show "$ifname" >/dev/null 2>&1 && return 0
+
+    ip link add link "$MACVLAN_PARENT" name "$ifname" type macvlan mode bridge
+    ip link set "$ifname" address "02:11:22:33:44:${mac_hex}"
+    ip link set "$ifname" up
+
+    # Get DHCP but keep default route on eth0
+    udhcpc -i "$ifname" -t 5 -n -q 2>/dev/null
+    # Remove any default route set by DHCP on the macvlan
+    ip route del default dev "$ifname" 2>/dev/null
+
+    logger -t esurfinggo "macvlan $ifname created with DHCP"
+}
+
+start() {
+    # Only create if parent interface exists and esurfing is installed
+    [ -x /usr/bin/esurfing ] || return 0
+    ip link show "$MACVLAN_PARENT" >/dev/null 2>&1 || return 0
+
+    local i
+    for i in $(seq 0 $((MACVLAN_COUNT - 1))); do
+        macvlan_create "$i"
+    done
+}
+
+stop() {
+    local i
+    for i in $(seq 0 $((MACVLAN_COUNT - 1))); do
+        ip link del "${MACVLAN_PREFIX}${i}" 2>/dev/null
+    done
+}
+
+case "$1" in
+    start|restart|reload) start ;;
+    stop) stop ;;
+    *) echo "Usage: $0 {start|stop|restart}"; exit 1 ;;
+esac

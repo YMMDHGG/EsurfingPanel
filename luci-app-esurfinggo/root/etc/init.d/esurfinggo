@@ -1,0 +1,137 @@
+#!/bin/sh /etc/rc.common
+# EsurfingGo init.d v1.4.8 - fix IPK format, unify build
+# v1.4.5 - remove dead 9999 port references
+# v1.4.2: removed port 9999 upload listener (upload now via LuCI controller); account save fix
+# v1.4.1: robust port detection (ss/netstat/proc), pidof fallback, no killall/pgrep dependency
+# v1.3.32: resolve_interface() maps names like "mv0" to integer indices via esurfing -s
+
+START=99
+STOP=10
+USE_PROCD=1
+
+BIN=/usr/bin/esurfing
+LOGFILE=/tmp/esurfing.log
+PIDDIR=/tmp
+
+log_msg() {
+    printf "[%s] %s\n" "$(date '+%H:%M:%S')" "$1" >> $LOGFILE
+}
+
+ensure_binary() {
+    if [ ! -f "$BIN" ]; then
+        log_msg "esurfing binary not found at $BIN - upload it via the web panel"
+        return 1
+    fi
+    if [ ! -x "$BIN" ]; then
+        chmod +x "$BIN" 2>/dev/null
+    fi
+    return 0
+}
+
+# v1.4.1: Kill esurfing 鈥?pidof always available (busybox), no killall/pgrep dependency
+kill_esurfing() {
+    local pids
+    pids=$(pidof esurfing 2>/dev/null)
+    [ -n "$pids" ] && kill $pids 2>/dev/null
+    return 0
+}
+
+# v1.3.32: Map interface name (e.g. "mv0") to integer index (e.g. 6)
+# using esurfing -s output which lists interfaces with their indices.
+resolve_interface() {
+    local ifname="$1"
+    # If already a number, return as-is
+    case "$ifname" in
+        ''|*[!0-9]*) ;;
+        *) echo "$ifname"; return 0 ;;
+    esac
+    # Run esurfing -s and find the line matching the interface name
+    if [ -x "$BIN" ]; then
+        local idx
+        idx=$($BIN -s 2>/dev/null | grep -w "$ifname" | awk '{print $1}' | tr -d ':')
+        if [ -n "$idx" ]; then
+            case "$idx" in
+                ''|*[!0-9]*) ;;
+                *)
+                    log_msg "mapped interface '$ifname' -> index $idx"
+                    echo "$idx"
+                    return 0
+                    ;;
+            esac
+        fi
+    fi
+    log_msg "WARNING: interface '$ifname' not found in esurfing -s output, using raw value"
+    echo "$ifname"
+    return 1
+}
+
+start_instance() {
+    local section="$1"
+    local account password sms interface
+
+    account=$(uci -q get esurfinggo."$section".account)
+    password=$(uci -q get esurfinggo."$section".password)
+    sms=$(uci -q get esurfinggo."$section".sms)
+    interface=$(uci -q get esurfinggo."$section".interface)
+
+    [ -z "$account" ] && { log_msg "skip $section: empty account"; return 0; }
+    [ -z "$password" ] && { log_msg "skip $section: empty password"; return 0; }
+
+    local args="$account $password"
+    [ -n "$sms" ] && args="$args $sms"
+
+    # v1.3.32: Resolve interface name to index before passing to esurfing
+    local iface_arg=""
+    if [ -n "$interface" ]; then
+        iface_arg=$(resolve_interface "$interface")
+    fi
+
+    log_msg "starting instance $section: account=$account interface=$interface index=$iface_arg"
+
+    procd_open_instance "esurfing_${section}"
+    procd_set_param command $BIN -u "$account" -p "$password" ${sms:+-s "$sms"} ${iface_arg:+-n "$iface_arg"}
+    procd_set_param pidfile "/tmp/esurfing_${section}.pid"
+    procd_set_param respawn 3600 5 5
+    procd_set_param stdout 1
+    procd_set_param stderr 1
+    procd_set_param env HOME="/root"
+    procd_append_param env PATH="/usr/sbin:/usr/bin:/sbin:/bin"
+    procd_close_instance
+
+    if [ -n "$sms" ]; then
+        uci -q delete esurfinggo."$section".sms
+        uci -q commit esurfinggo
+    fi
+}
+
+start_service() {
+    ensure_binary || return 1
+
+    local count=0
+    local sections
+    sections=$(uci -q show esurfinggo 2>/dev/null | grep "=account$" | cut -d. -f2 | cut -d= -f1)
+    [ -z "$sections" ] && { log_msg "no accounts configured - nothing to do"; return 0; }
+
+    for section in $sections; do
+        start_instance "$section"
+        count=$((count + 1))
+    done
+
+    log_msg "started $count procd-managed instance(s)"
+}
+
+stop_service() {
+    log_msg "stopping all procd-managed esurfing instances"
+    rm -f /tmp/esurfing_*.pid
+}
+
+reload_service() {
+    stop_service
+    sleep 1
+    start_service
+}
+
+# v1.4.1: pidof always available via busybox on OpenWrt
+service_running() {
+    pidof esurfing >/dev/null 2>&1
+}

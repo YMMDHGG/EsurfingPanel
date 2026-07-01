@@ -1,0 +1,3 @@
+#!/bin/sh
+rm -f /tmp/esurfing* /tmp/luci-* 2>/dev/null
+exit 0

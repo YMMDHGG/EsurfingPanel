@@ -1,0 +1,52 @@
+#!/bin/sh
+# UCI defaults for luci-app-esurfinggo
+
+# Create default config if not exists
+[ -f /etc/config/esurfinggo ] || touch /etc/config/esurfinggo
+
+uci set esurfinggo.module=main 2>/dev/null
+uci set esurfinggo.module.enabled='0' 2>/dev/null
+uci set esurfinggo.log=log 2>/dev/null
+uci set esurfinggo.log.enabled='1' 2>/dev/null
+
+# Always ensure at least one account section
+COUNT=$(uci show esurfinggo 2>/dev/null | grep -c "=account$")
+if [ "$COUNT" = "0" ] || [ -z "$COUNT" ]; then
+	uci set esurfinggo.account=account 2>/dev/null
+	uci set esurfinggo.account.enabled='0' 2>/dev/null
+	uci set esurfinggo.account.account='' 2>/dev/null
+	uci set esurfinggo.account.password='' 2>/dev/null
+	uci set esurfinggo.account.sms='' 2>/dev/null
+fi
+
+uci commit esurfinggo 2>/dev/null
+
+# Ensure exactly one empty account section (delete all empty duplicates first)
+# Step 1: collect all account section names
+SECTIONS=$(uci show esurfinggo 2>/dev/null | grep "=account$" | cut -d. -f2 | cut -d= -f1)
+COUNT=$(echo "$SECTIONS" | grep -c . 2>/dev/null || echo 0)
+
+# Step 2: delete all empty account sections (no account AND no password)
+for sec in $SECTIONS; do
+    acc=$(uci get esurfinggo.$sec.account 2>/dev/null)
+    pwd=$(uci get esurfinggo.$sec.password 2>/dev/null)
+    if [ -z "$acc" ] && [ -z "$pwd" ]; then
+        uci delete esurfinggo.$sec 2>/dev/null
+    fi
+done
+
+# Step 3: ensure at least one account section exists
+COUNT=$(uci show esurfinggo 2>/dev/null | grep -c "=account$")
+if [ "$COUNT" = "0" ]; then
+	uci set esurfinggo.account=account
+	uci set esurfinggo.account.enabled='0'
+	uci set esurfinggo.account.account=''
+	uci set esurfinggo.account.password=''
+	uci set esurfinggo.account.sms=''
+	uci commit esurfinggo
+fi
+
+# Clear luci cache
+rm -f /tmp/luci-* 2>/dev/null
+
+exit 0
