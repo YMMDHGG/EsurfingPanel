@@ -14,10 +14,10 @@
 
 ## 支持平台
 
-| 平台 | 架构 | LuCI 类型 | 状态 |
-|------|------|----------|:--:|
-| OpenWrt | arm64 | Lua | ✅ |
-| ImmortalWrt | aarch64 | ucode | ✅ |
+| 平台 | LuCI 类型 | 状态 |
+|------|----------|:--:|
+| OpenWrt (arm64) | Lua | ✅ |
+| ImmortalWrt (arm64) | ucode | ✅ |
 
 ## 安装
 
