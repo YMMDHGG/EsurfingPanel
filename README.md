@@ -17,7 +17,7 @@
 | 平台 | LuCI 类型 | 状态 |
 |------|----------|:--:|
 | OpenWrt | arm64 | Lua | ✅ |
-| ImmortalWrt ||arm64 | ucode | ✅ |
+| ImmortalWrt | arm64 | ucode | ✅ |
 
 ## 安装
 
