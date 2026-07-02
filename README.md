@@ -16,8 +16,8 @@
 
 | 平台 | LuCI 类型 | 状态 |
 |------|----------|:--:|
-| OpenWrt (arm64) | Lua | ✅ |
-| ImmortalWrt (arm64) | ucode | ✅ |
+| OpenWrt | arm64 | Lua | ✅ |
+| ImmortalWrt ||arm64 | ucode | ✅ |
 
 ## 安装
 
@@ -39,8 +39,8 @@ sh luci-app-esurfinggo_1.0.0_run.run
 ## 使用
 
 1. 打开面板，在「热更新模块」上传你的 esurfing 二进制
-2. 在「拨号账号列表」添加账号密码
-3. 点连接，完事
+2. 在「拨号账号列表」添加账号密码，保存账号密码
+3. 点拨号，完事
 
 ## 从源码构建
 
