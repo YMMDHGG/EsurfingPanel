@@ -1,0 +1,26 @@
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*.pyo
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts (we ship builds/ separately)
+*.egg-info/
+dist/
+
+# Python virtualenv
+venv/
+.venv/
+
+# Temp debug files
+*_debug.log
+*.tmp

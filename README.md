@@ -25,13 +25,13 @@
 
 ```bash
 # 方式一：opkg 安装（推荐）
-opkg install luci-app-esurfinggo_1.4.11_all.ipk
+opkg install luci-app-esurfinggo_1.0.0_all.ipk
 
 # 如果报 Malformed，用 clean 版
-opkg install luci-app-esurfinggo_1.4.11_all_gzip.ipk
+opkg install luci-app-esurfinggo_1.0.0_all_gzip.ipk
 
 # 方式二：自解压脚本
-sh luci-app-esurfinggo_1.4.11_run.run
+sh luci-app-esurfinggo_1.0.0_run.run
 ```
 
 安装后访问：`http://路由器IP/cgi-bin/luci/admin/services/esurfing`
@@ -49,19 +49,6 @@ python3 build_packages.py
 ```
 
 输出三种包：`.ipk`（标准）、`_gzip.ipk`（无 conffiles）、`.run`（自解压）
-
-## 版本
-
-当前 **v1.4.11**
-
-| 版本 | 主要变更 |
-|------|---------|
-| v1.4.11 | 多策略上传，兼容 ucode 和 Lua LuCI |
-| v1.4.10 | 移除 base64 命令依赖，改用 nixio |
-| v1.4.9 | 架构匹配检测优化 |
-| v1.4.8 | IPK 格式修复，多格式构建 |
-| v1.4.6 | 编码修复，init.d 参数修正 |
-| v1.4.4 | 稳定基线版本 |
 
 ## 致谢
 
