@@ -44,11 +44,20 @@ sh luci-app-esurfinggo_1.0.0_run.run
 
 ## 从源码构建
 
+将 `luci-app-esurfinggo/` 目录按 OpenWrt IPK 格式打包：
+
 ```bash
-python3 build_packages.py
+# data.tar.gz
+cd root && tar czf ../data.tar.gz . && cd ..
+# control.tar.gz
+cd control && tar czf ../control.tar.gz . && cd ..
+# debian-binary
+echo "2.0" > debian-binary
+# IPK (gzip 外层 tar)
+tar czf luci-app-esurfinggo_1.0.0_all.ipk debian-binary data.tar.gz control.tar.gz
 ```
 
-输出三种包：`.ipk`（标准）、`_gzip.ipk`（无 conffiles）、`.run`（自解压）
+> ⚠️ Windows 下建议在 WSL 或路由器上构建，避免 GZIP 头差异。
 
 ## 致谢
 
